@@ -139,7 +139,7 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                       <p><strong>Follow Sanskar or Creator on:</strong></p>
                       <ul className="list-disc list-inside space-y-1 ml-2 text-slate-400">
                         <li>GitHub: <a href="https://www.github.com/Sanskar-in" target="_blank" rel="noreferrer" className="text-blue-400 hover:underline">https://www.github.com/Sanskar-in</a></li>
-                        <li>LinkedIn: <a href="https://www.linkedin.com/in/sanskar-in" target="_blank" rel="noreferrer" className="text-blue-400 hover:underline">https://www.linkedin.com/in/sanskar-in</a></li>
+                        <li>LinkedIn: <a href="https://www.linkedin.com/in/sanskar-in/" target="_blank" rel="noreferrer" className="text-blue-400 hover:underline">https://www.linkedin.com/in/sanskar-in/</a></li>
                         <li>X (Twitter): <a href="https://x.com/Sanskar_in" target="_blank" rel="noreferrer" className="text-blue-400 hover:underline">https://x.com/Sanskar_in</a></li>
                       </ul>
                       <p className="mt-4"><strong>Source Code available at:</strong> <a href="https://www.github.com/Sanskar-in/Sanskar-PDF-Editor" target="_blank" rel="noreferrer" className="text-blue-400 hover:underline">GitHub Repository</a></p>
