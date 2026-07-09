@@ -1,29 +1,15 @@
-# Sanskar's PDF Editor - Documentation
+# Sanskar PDF Editor Documentation
 
-Welcome to the documentation for **Sanskar's PDF Editor**, a premium, cross-platform PDF editing and manipulation tool.
+Welcome to the official documentation for the Sanskar PDF Editor (Enterprise Edition).
 
-## Creator Information
+## Table of Contents
 
-**Made by the Sanskar Yadav**
+1. [Installation & Setup](installation.md) - How to build and run the app for Desktop, Web, and Android.
+2. [Hybrid Architecture](architecture.md) - Technical overview of how Rust, React, and Tauri work together.
+3. [Rust IPC API](api.md) - Reference for the Inter-Process Communication (IPC) commands exposed to the frontend.
 
-Follow Sanskar or Creator on:-
-* **GitHub**:- [https://www.github.com/Sanskar-in](https://www.github.com/Sanskar-in)
-* **LinkedIn**:- [https://www.linkedin.com/in/sanskar-in](https://www.linkedin.com/in/sanskar-in)
-* **X (Formally known as Twitter)**:- [https://www.x.com/Sanskar_in](https://www.x.com/Sanskar_in)
+## Contributing
 
-## Source Code
+If you'd like to suggest new features, please add them to the `docs/users_suggest/` directory.
 
-Source will available at the GitHub:- [https://www.github.com/Sanskar-in/Sanskar-PDF-Editor](https://www.github.com/Sanskar-in/Sanskar-PDF-Editor)
-
-## Support & Contact
-
-* **Need support**:- supportramsandesh@gmail.com
-* **Want to make your own apps, websites, games, or anything else via Sanskar**:- sanskaryadavfrom2012to2026@gmail.com
-
-## Supported Platforms
-- Windows (Currently Supported & Fully Tested)
-- Web (Planned / Experimental)
-- Android (Planned)
-- Linux (Planned for future implementation)
-
-For future roadmap, check the `upcoming` directory.
+All code is fully open source under the MIT License / Apache 2.0.
