@@ -7,7 +7,7 @@ export default function FollowSanskar() {
 
   const links = [
     { name: 'Follow on GitHub', url: 'https://github.com/Sanskar-in', icon: <FaGithub size={20} />, color: 'bg-gray-800 hover:bg-gray-700' },
-    { name: 'Follow on X', url: 'https://www.x.com/Sanskar1729', icon: <FaTwitter size={20} />, color: 'bg-black hover:bg-gray-900' },
+    { name: 'Follow on X', url: 'https://x.com/Sanskar_in', icon: <FaTwitter size={20} />, color: 'bg-black hover:bg-gray-900' },
     { name: 'Connect on LinkedIn', url: 'https://www.linkedin.com/in/sanskar-yadav-in/', icon: <FaLinkedin size={20} />, color: 'bg-blue-700 hover:bg-blue-800' },
     { name: 'Buy E-books on Gumroad', url: 'https://ramsandesh.gumroad.com/', icon: <FiExternalLink size={20} />, color: 'bg-pink-500 hover:bg-pink-600' },
     { name: 'Call Sanskar', url: 'tel:+919795753292', icon: <FiPhone size={20} />, color: 'bg-green-500 hover:bg-green-600' },

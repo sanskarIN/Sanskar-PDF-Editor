@@ -5,13 +5,13 @@
 // Follow Sanskar or Creater on:-
 // GitHub:- https://www.github.com/Sanskar-in
 // LinkedIn:- https://www.linkedin.com/in/sanskar-in
-// X (Formally known as Twitter):- https://www.x.com/Sanskar_in
+// X (Formally known as Twitter):- https://x.com/Sanskar_in
 // Source will available at the GitHub:- https://www.github.com/Sanskar-in/Sanskar-PDF-Editor
 // Need support:- supportramsandesh@gmail.com
 // Want to make your own apps, websites, games, or anything else via Sanskar:- sanskaryadavfrom2012to2026@gmail.com
 // =============================================================================
 
-# Sanskar PDF Editor - Enterprise Edition (v0.0.1.1)
+# Sanskar PDF Editor - Enterprise Edition (v0.0.1.2)
 
 Welcome to **Sanskar's PDF Editor**! This project is an ultimate, enterprise-grade, offline-first PDF Editor featuring 70+ advanced tools. Built with React, Tauri v2, and Rust for lightning-fast, secure performance across Windows, Android, and Web.
 
