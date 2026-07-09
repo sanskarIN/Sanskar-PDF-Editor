@@ -1,5 +1,5 @@
 # Ignore compiled HTML/JS/Android/C++ SDK files from GitHub Language Statistics
-versions/web/Web-Version.html linguist-generated=true
+versions/**/*.html linguist-generated=true
 patch_features.mjs linguist-generated=true
 patch_more.mjs linguist-generated=true
 public/splashscreen.html linguist-generated=true
