@@ -587,3 +587,6 @@ pub fn run() {
 }
 
 pub mod pdf_engine_core;
+
+pub mod redaction_engine;
+pub mod advanced_crypto;
