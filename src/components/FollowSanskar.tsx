@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FaGithub, FaTwitter, FaLinkedin } from 'react-icons/fa';
+import { FaGithub, FaTwitter, FaLinkedin, FaYoutube } from 'react-icons/fa';
 import { FiExternalLink, FiPhone, FiMail, FiHelpCircle } from 'react-icons/fi';
 
 export default function FollowSanskar() {
@@ -9,6 +9,7 @@ export default function FollowSanskar() {
     { name: 'Follow on GitHub', url: 'https://www.github.com/Sanskar-in', icon: <FaGithub size={20} />, color: 'bg-gray-800 hover:bg-gray-700' },
     { name: 'Follow on X', url: 'https://x.com/Sanskar_in', icon: <FaTwitter size={20} />, color: 'bg-black hover:bg-gray-900' },
     { name: 'Connect on LinkedIn', url: 'https://www.linkedin.com/in/sanskar-in/', icon: <FaLinkedin size={20} />, color: 'bg-blue-700 hover:bg-blue-800' },
+    { name: 'Subscribe on YouTube', url: 'https://youtube.com/@Sanskar-in', icon: <FaYoutube size={20} />, color: 'bg-red-600 hover:bg-red-700' },
     { name: 'Buy E-books on Gumroad', url: 'https://ramsandesh.gumroad.com/', icon: <FiExternalLink size={20} />, color: 'bg-pink-500 hover:bg-pink-600' },
     { name: 'Call Sanskar', url: 'tel:+919795753292', icon: <FiPhone size={20} />, color: 'bg-green-500 hover:bg-green-600' },
     { name: 'Contact by Gmail', url: 'mailto:sanskaryadavfrom2012to2026@gmail.com', icon: <FiMail size={20} />, color: 'bg-red-500 hover:bg-red-600' },
