@@ -1,0 +1,19 @@
+# Ignore compiled HTML/JS/Android/C++ SDK files from GitHub Language Statistics
+versions/web/Web-Version.html linguist-generated=true
+patch_features.mjs linguist-generated=true
+patch_more.mjs linguist-generated=true
+public/splashscreen.html linguist-generated=true
+
+# Ignore Tauri generated Android/Java/XML code
+src-tauri/gen/** linguist-generated=true
+
+# Ignore massive C++ headers for Pdfium
+src-tauri/pdfium/** linguist-generated=true
+src-tauri/include/** linguist-generated=true
+src-tauri/lib/** linguist-generated=true
+src-tauri/licenses/** linguist-generated=true
+
+# Explicitly ensure these are counted accurately
+*.ts linguist-language=TypeScript
+*.tsx linguist-language=TypeScript
+*.rs linguist-language=Rust
