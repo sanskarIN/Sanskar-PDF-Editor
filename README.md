@@ -12,7 +12,7 @@
 // Want to make your own apps, websites, games, or anything else via Sanskar:- sanskaryadavfrom2012to2026@gmail.com
 // =============================================================================
 
-# Sanskar PDF Editor - Enterprise Edition (v0.0.1.5)
+# Sanskar PDF Editor - Enterprise Edition (v0.0.1.6)
 
 Welcome to **Sanskar's PDF Editor**! This project is an ultimate, enterprise-grade, offline-first PDF Editor featuring 70+ advanced tools. Built with React, Tauri v2, and Rust for lightning-fast, secure performance across Windows, Android, and Web.
 
