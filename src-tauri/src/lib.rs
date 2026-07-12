@@ -565,6 +565,213 @@ async fn close_splashscreen(window: tauri::Window) {
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
+            }
+        }
+        Object::Array(arr) => {
+            for item in arr.iter_mut() {
+                remap_references(item, id_map);
+            }
+        }
+        Object::Stream(stream) => {
+            for (_, val) in stream.dict.iter_mut() {
+                remap_references(val, id_map);
+            }
+        }
+        _ => {}
+    }
+}
+
+/// Deletes specified pages (1-indexed) from a PDF and saves the result.
+#[tauri::command]
+fn delete_pdf_pages(
+    file_path: String,
+    pages_to_delete: Vec<u32>,
+    output_path: String,
+) -> Result<String, String> {
+    let mut doc =
+        Document::load(&file_path).map_err(|e| format!("Failed to load PDF: {}", e))?;
+
+    let pages = doc.get_pages();
+    let total = pages.len() as u32;
+
+    // Validate page numbers.
+    for &p in &pages_to_delete {
+        if p < 1 || p > total {
+            return Err(format!(
+                "Invalid page number {}. Document has {} pages.",
+                p, total
+            ));
+        }
+    }
+
+    if pages_to_delete.len() as u32 >= total {
+        return Err("Cannot delete all pages from the document".to_string());
+    }
+
+    // Collect page ObjectIds to delete (sorted descending so removal is stable).
+    let mut to_delete: Vec<u32> = pages_to_delete.clone();
+    to_delete.sort_unstable();
+    to_delete.dedup();
+
+    for &page_num in to_delete.iter().rev() {
+        doc.delete_pages(&[page_num]);
+    }
+
+    doc.save(&output_path)
+        .map_err(|e| format!("Failed to save PDF: {}", e))?;
+
+    let remaining = count_pages(
+        &Document::load(&output_path).map_err(|e| e.to_string())?,
+    );
+    Ok(format!(
+        "Deleted {} page(s). {} pages remaining.",
+        to_delete.len(),
+        remaining
+    ))
+}
+
+/// Rotates a single page (1-indexed) by the given degrees (must be multiple of 90).
+#[tauri::command]
+fn rotate_pdf_page(
+    file_path: String,
+    page_number: u32,
+    degrees: i32,
+    output_path: String,
+) -> Result<String, String> {
+    if degrees % 90 != 0 {
+        return Err("Rotation degrees must be a multiple of 90".to_string());
+    }
+
+    let mut doc =
+        Document::load(&file_path).map_err(|e| format!("Failed to load PDF: {}", e))?;
+
+    let pages = doc.get_pages();
+    let page_id = pages
+        .get(&page_number)
+        .ok_or_else(|| {
+            format!(
+                "Page {} not found (document has {} pages)",
+                page_number,
+                pages.len()
+            )
+        })?;
+    let page_id = *page_id;
+
+    // Read current rotation, add the requested amount, normalise to 0..360.
+    let current_rotation = {
+        if let Ok(Object::Dictionary(ref dict)) = doc.get_object(page_id) {
+            match dict.get(b"Rotate") {
+                Ok(Object::Integer(n)) => *n as i32,
+                _ => 0,
+            }
+        } else {
+            0
+        }
+    };
+
+    let new_rotation = ((current_rotation + degrees) % 360 + 360) % 360;
+
+    if let Ok(Object::Dictionary(ref mut dict)) = doc.get_object_mut(page_id) {
+        dict.set("Rotate", Object::Integer(new_rotation as i64));
+    }
+
+    doc.save(&output_path)
+        .map_err(|e| format!("Failed to save PDF: {}", e))?;
+
+    Ok(format!(
+        "Rotated page {} by {} degrees (new rotation: {})",
+        page_number, degrees, new_rotation
+    ))
+}
+
+/// Returns the entire PDF file as a base64-encoded string for pdf.js rendering.
+#[tauri::command]
+fn get_pdf_bytes(file_path: String) -> Result<String, String> {
+    let bytes = fs::read(&file_path).map_err(|e| format!("Failed to read file: {}", e))?;
+    Ok(STANDARD.encode(&bytes))
+}
+
+/// Copies a PDF file to a new location.
+#[tauri::command]
+fn save_pdf_copy(source_path: String, dest_path: String) -> Result<String, String> {
+    let src = Path::new(&source_path);
+    if !src.exists() {
+        return Err(format!("Source file not found: {}", source_path));
+    }
+
+    // Make sure destination directory exists.
+    if let Some(parent) = Path::new(&dest_path).parent() {
+        fs::create_dir_all(parent).map_err(|e| e.to_string())?;
+    }
+
+    fs::copy(&source_path, &dest_path).map_err(|e| format!("Failed to copy file: {}", e))?;
+
+    Ok(format!("Saved copy to {}", dest_path))
+}
+
+/// Returns detailed document information.
+#[tauri::command]
+fn get_document_info(file_path: String) -> Result<DocumentInfo, String> {
+    let path = Path::new(&file_path);
+    if !path.exists() {
+        return Err(format!("File not found: {}", file_path));
+    }
+
+    let file_meta = fs::metadata(path).map_err(|e| e.to_string())?;
+    let file_size = file_meta.len();
+    let file_name = path
+        .file_name()
+        .map(|n| n.to_string_lossy().to_string())
+        .unwrap_or_else(|| "unknown.pdf".to_string());
+
+    let doc = Document::load(&file_path).map_err(|e| format!("Failed to load PDF: {}", e))?;
+
+    let page_count = count_pages(&doc);
+    let metadata = extract_metadata(&doc);
+
+    let pdf_version = doc.version.clone();
+
+    Ok(DocumentInfo {
+        file_path: file_path.clone(),
+        file_name,
+        file_size,
+        page_count,
+        pdf_version,
+        metadata,
+    })
+}
+
+use tauri::Manager;
+
+// ---------------------------------------------------------------------------
+// Tauri bootstrap
+// ---------------------------------------------------------------------------
+
+#[tauri::command]
+fn redact_pdf_command(file_path: String, boxes: Vec<crate::redaction_engine::BoundingBox>) -> Result<String, String> {
+    crate::redaction_engine::execute_deep_redaction(&file_path, boxes)?;
+    Ok("Redaction applied successfully. All underlying vector data has been physically wiped.".to_string())
+}
+
+#[tauri::command]
+fn sign_pdf_command(file_path: String, cert_id: String) -> Result<String, String> {
+    crate::advanced_crypto::sign_pdf_with_pki(&file_path, &cert_id)?;
+    Ok("Digital Signature (PADES) cryptographically applied to the document.".to_string())
+}
+
+#[tauri::command]
+async fn close_splashscreen(window: tauri::Window) {
+    // Close splashscreen
+    if let Some(splashscreen) = window.get_webview_window("splashscreen") {
+        let _ = splashscreen.close();
+    }
+    // Show main window
+    if let Some(main_window) = window.get_webview_window("main") {
+        let _ = main_window.show();
+    }
+}
+
+#[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_fs::init())
@@ -581,6 +788,8 @@ pub fn run() {
             save_pdf_copy,
             get_document_info,
             close_splashscreen,
+            redact_pdf_command,
+            sign_pdf_command
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

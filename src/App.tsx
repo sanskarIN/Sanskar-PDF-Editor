@@ -14,6 +14,7 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorkerUrl;
 import SettingsModal from './components/SettingsModal';
 import InteractiveStudio from './components/InteractiveStudio';
 import SignatureModal from './components/SignatureModal';
+import SecurityPanel from './components/SecurityPanel';
 import { invoke } from '@tauri-apps/api/core';
 import { open, save } from '@tauri-apps/plugin-dialog';
 import { writeFile, readFile } from '@tauri-apps/plugin-fs';
@@ -120,6 +121,7 @@ export default function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [showStudio, setShowStudio] = useState(false);
   const [showSignatureModal, setShowSignatureModal] = useState(false);
+  const [showSecurityPanel, setShowSecurityPanel] = useState(false);
   const [metadata, setMetadata] = useState<any>(null);
   const [thumbnails, setThumbnails] = useState<string[]>([]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -535,6 +537,10 @@ export default function App() {
         setIsProcessing(false);
         break;
       }
+      case 'redact': {
+        setShowSecurityPanel(true);
+        break;
+      }
       case 'custom-watermark': {
         const text = prompt("Enter watermark text (e.g., CONFIDENTIAL):");
         if (text) {
@@ -691,6 +697,48 @@ export default function App() {
                 } catch(e) {
                   console.error(e);
                   alert('Signature embedding failed.');
+                }
+                setIsProcessing(false);
+              }}
+            />
+          )}
+          {showSecurityPanel && (
+            <SecurityPanel
+              isProcessing={isProcessing}
+              onClose={() => setShowSecurityPanel(false)}
+              onRedact={async () => {
+                setShowSecurityPanel(false);
+                setIsProcessing(true);
+                try {
+                  if (desktopFilePath) {
+                    const result = await invoke('redact_pdf_command', { 
+                      filePath: desktopFilePath,
+                      boxes: [{ x: 100.0, y: 100.0, width: 300.0, height: 200.0 }]
+                    });
+                    alert(result as string);
+                  } else {
+                    alert('True Redaction requires a saved desktop file.');
+                  }
+                } catch (e: any) {
+                  alert(`Redaction failed: ${e}`);
+                }
+                setIsProcessing(false);
+              }}
+              onSign={async () => {
+                setShowSecurityPanel(false);
+                setIsProcessing(true);
+                try {
+                  if (desktopFilePath) {
+                    const result = await invoke('sign_pdf_command', {
+                      filePath: desktopFilePath,
+                      certId: "user-certificate-123"
+                    });
+                    alert(result as string);
+                  } else {
+                    alert('Digital Signatures require a saved desktop file.');
+                  }
+                } catch (e: any) {
+                  alert(`Signature failed: ${e}`);
                 }
                 setIsProcessing(false);
               }}
