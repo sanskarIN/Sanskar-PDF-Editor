@@ -748,6 +748,18 @@ use tauri::Manager;
 // ---------------------------------------------------------------------------
 
 #[tauri::command]
+fn summarize_pdf_command(file_path: String) -> Result<String, String> {
+    let doc = Document::load(&file_path).map_err(|e| format!("Failed to load PDF: {}", e))?;
+    let mut full_text = String::new();
+    let pages = doc.get_pages();
+    for page_number in 1..=std::cmp::min(pages.len() as u32, 5) {
+        if let Some(page_id) = pages.get(&page_number) {
+            full_text.push_str(&extract_page_text(&doc, *page_id));
+            full_text.push(' ');
+        }
+    }
+    crate::ai_engine::summarize_text(&full_text)
+}
 fn redact_pdf_command(file_path: String, boxes: Vec<crate::redaction_engine::BoundingBox>) -> Result<String, String> {
     crate::redaction_engine::execute_deep_redaction(&file_path, boxes)?;
     Ok("Redaction applied successfully. All underlying vector data has been physically wiped.".to_string())
@@ -789,13 +801,14 @@ pub fn run() {
             get_document_info,
             close_splashscreen,
             redact_pdf_command,
-            sign_pdf_command
+            sign_pdf_command,
+            summarize_pdf_command
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
 
 pub mod pdf_engine_core;
-
 pub mod redaction_engine;
 pub mod advanced_crypto;
+pub mod ai_engine;

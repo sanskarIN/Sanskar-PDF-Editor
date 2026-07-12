@@ -3083,7 +3083,7 @@ dependencies = [
 
 [[package]]
 name = "sanskar-pdf-editor"
-version = "2.0.12"
+version = "0.0.1"
 dependencies = [
  "base64 0.22.1",
  "lopdf",

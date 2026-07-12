@@ -15,18 +15,23 @@ import SettingsModal from './components/SettingsModal';
 import InteractiveStudio from './components/InteractiveStudio';
 import SignatureModal from './components/SignatureModal';
 import SecurityPanel from './components/SecurityPanel';
+import AIPanel from './components/AIPanel';
 import { invoke } from '@tauri-apps/api/core';
 import { open, save } from '@tauri-apps/plugin-dialog';
 import { writeFile, readFile } from '@tauri-apps/plugin-fs';
+import { Bot } from 'lucide-react';
 
 const isTauri = typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window;
 const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 const shouldUseWebFallback = isMobile || !isTauri;
 
-type ToolCategory = 'Organize' | 'Convert' | 'Edit' | 'Security';
+type ToolCategory = 'Organize' | 'Convert' | 'Edit' | 'Security' | 'AI Studio';
 type ToolDef = { id: string; name: string; desc: string; icon: any; category: ToolCategory; requiresFile: boolean; action?: string; };
 
 const ALL_TOOLS: ToolDef[] = [
+  // AI STUDIO (1)
+  { id: 'ai-summary', name: 'AI Summary', desc: 'Generate an intelligent document summary using the local AI engine.', icon: Bot, category: 'AI Studio', requiresFile: true, action: 'ai-summary' },
+  
   // ORGANIZE (12)
   { id: 'merge', name: 'Merge PDF', desc: 'Combine multiple PDFs into one unified document.', icon: Layers, category: 'Organize', requiresFile: false, action: 'merge' },
   { id: 'split', name: 'Split PDF', desc: 'Extract ranges or cut your PDF in half.', icon: Scissors, category: 'Organize', requiresFile: true },
@@ -122,6 +127,8 @@ export default function App() {
   const [showStudio, setShowStudio] = useState(false);
   const [showSignatureModal, setShowSignatureModal] = useState(false);
   const [showSecurityPanel, setShowSecurityPanel] = useState(false);
+  const [showAIPanel, setShowAIPanel] = useState(false);
+  const [aiSummaryResult, setAiSummaryResult] = useState<string | null>(null);
   const [metadata, setMetadata] = useState<any>(null);
   const [thumbnails, setThumbnails] = useState<string[]>([]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -541,6 +548,10 @@ export default function App() {
         setShowSecurityPanel(true);
         break;
       }
+      case 'ai-summary': {
+        setShowAIPanel(true);
+        break;
+      }
       case 'custom-watermark': {
         const text = prompt("Enter watermark text (e.g., CONFIDENTIAL):");
         if (text) {
@@ -739,6 +750,30 @@ export default function App() {
                   }
                 } catch (e: any) {
                   alert(`Signature failed: ${e}`);
+                }
+                setIsProcessing(false);
+              }}
+            />
+          )}
+          {showAIPanel && (
+            <AIPanel
+              isProcessing={isProcessing}
+              summaryResult={aiSummaryResult}
+              onClose={() => {
+                setShowAIPanel(false);
+                setAiSummaryResult(null); // Reset when closed
+              }}
+              onSummarize={async () => {
+                setIsProcessing(true);
+                try {
+                  if (desktopFilePath) {
+                    const result = await invoke('summarize_pdf_command', { filePath: desktopFilePath });
+                    setAiSummaryResult(result as string);
+                  } else {
+                    alert('AI Summarization requires a saved desktop file to read.');
+                  }
+                } catch (e: any) {
+                  alert(`AI Engine Error: ${e}`);
                 }
                 setIsProcessing(false);
               }}

@@ -11,6 +11,7 @@ import {
   RotateCw,
   Trash2,
   FileText,
+  Shield,
 } from 'lucide-react';
 
 interface ToolbarProps {
@@ -31,6 +32,7 @@ interface ToolbarProps {
   onRotateRight: () => void;
   onDeletePage: () => void;
   onExtractText: () => void;
+  onShowSecurity: () => void;
 }
 
 function ToolbarButton({
@@ -87,6 +89,7 @@ export default function Toolbar({
   onRotateRight,
   onDeletePage,
   onExtractText,
+  onShowSecurity,
 }: ToolbarProps) {
   const handlePageInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -171,10 +174,13 @@ export default function Toolbar({
 
       <Separator />
 
-      {/* View */}
+      {/* View & Security */}
       <div className="flex items-center gap-0.5">
         <ToolbarButton onClick={onExtractText} disabled={!hasDocument} title="Extract Text">
           <FileText size={18} />
+        </ToolbarButton>
+        <ToolbarButton onClick={onShowSecurity} disabled={!hasDocument} title="Security & Redaction">
+          <Shield size={18} className="text-red-400" />
         </ToolbarButton>
       </div>
     </div>
