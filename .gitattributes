@@ -1,8 +1,10 @@
-# Ignore compiled HTML/JS/Android/C++ SDK files from GitHub Language Statistics
-versions/**/*.html linguist-generated=true
-patch_features.mjs linguist-generated=true
-patch_more.mjs linguist-generated=true
-public/splashscreen.html linguist-generated=true
+# Ignore massive compiled output and extra web bundles
+versions/** linguist-generated=true
+dist/** linguist-generated=true
+android_version/** linguist-generated=true
+server/** linguist-generated=true
+public/** linguist-generated=true
+*.mjs linguist-generated=true
 
 # Ignore Tauri generated Android/Java/XML code
 src-tauri/gen/** linguist-generated=true
