@@ -3,13 +3,13 @@
 // Made by the Sanskar Yadav.
 // 
 // Follow Sanskar or Creater on:-
-// GitHub:- https://www.github.com/Sanskar-in
-// LinkedIn:- https://www.linkedin.com/in/sanskar-in/
+// GitHub:- https://www.github.com/sanskarIN
+// LinkedIn:- https://www.linkedin.com/in/sanskarIN
 // YouTube:- https://youtube.com/@Sanskar-in
 // X (Formally known as Twitter):- https://x.com/Sanskar_in
 // Source will available at the GitHub:- https://www.github.com/Sanskar-in/Sanskar-PDF-Editor
 // Need support:- supportramsandesh@gmail.com
-// Want to make your own apps, websites, games, or anything else via Sanskar:- sanskaryadavfrom2012to2026@gmail.com
+// Want to make your own apps, websites, games, or anything else via Sanskar:- sanskarin@outlook.in
 // =============================================================================
 
 # Sanskar PDF Editor - Enterprise Edition (v0.0.1.6)
